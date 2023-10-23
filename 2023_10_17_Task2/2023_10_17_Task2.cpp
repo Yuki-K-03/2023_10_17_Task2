@@ -3,6 +3,7 @@
 #include <cstring>
 using namespace std;
 
+class Enemy;
 
 const int MAX_NAME = 16;
 
@@ -12,14 +13,18 @@ public :
     ~Hero();
 
 public:
-    int GetStatus(char *name, int hp, int attack, int deffence) {
-        name = name_array;
-        hp = StatusHp;
-        attack = statusAttack;
-        deffence = statusDiffence;
+    int GetDiffence() {
+        return statusDiffence;
     };
+    int GetHp(int damage = 0) {
+        return StatusHp - damage;
+    }
     void SetHp(int hp) { StatusHp = hp; };
     void Show();
+
+public :
+    void attack(Enemy* enemy);
+    void heal();
 
 private :
     char* name_array;
@@ -27,7 +32,7 @@ private :
 
 private :
     int StatusHp = 0;
-    int statusAttack = 40;
+    int statusAttack = 75;
     int statusDiffence = 20;
 };
 
@@ -64,14 +69,18 @@ public:
     ~Enemy();
 
 public:
-    int GetStatus(char* name, int hp, int attack, int deffence) {
-        name = name_array;
-        hp = StatusHp;
-        attack = statusAttack;
-        deffence = statusDiffence;
+    int GetDiffence() {
+        return statusDiffence;
     };
+    int GetHp(int damage = 0) {
+        return StatusHp -= damage;
+    }
     void SetHp(int hp) { StatusHp = hp; };
     void Show();
+
+public:
+    void attack(Hero* hero);
+    void heal();
 
 private:
     char* name_array;
@@ -79,8 +88,8 @@ private:
 
 private:
     int StatusHp = 0;
-    int statusAttack = 20;
-    int statusDiffence = 40;
+    int statusAttack = 50;
+    int statusDiffence = 30;
 };
 
 // コンストラクタ
@@ -109,7 +118,7 @@ void Enemy::Show() {
     printf("防御力：%d\n", statusDiffence);
 }
 
-void InputHeroStatus() {
+Hero InputHeroStatus() {
     char name[MAX_NAME]{""};
     int hp = 0;
 
@@ -122,9 +131,11 @@ void InputHeroStatus() {
     hero.SetHp(hp);
 
     hero.Show();
+
+    return hero;
 }
 
-void InputEnemyStatus() {
+Enemy InputEnemyStatus() {
     char name[MAX_NAME]{ "" };
     int hp = 0;
 
@@ -137,37 +148,80 @@ void InputEnemyStatus() {
     enemy.SetHp(hp);
 
     enemy.Show();
+
+    return enemy;
 }
 
-void attack(Hero *hero) {
+void Hero::attack(Enemy* enemy) {
+    int deffence = enemy->GetDiffence();
+    int damage = 0;
+    damage = statusAttack - deffence;
+    printf("%sの攻撃！\n%dのダメージを与えた\n", name_array, damage);
 
+    int hp = enemy->GetHp(damage);
+    printf("相手の残りHP : %d\n", hp);
+    
 }
 
-void attack(Enemy *enemy) {
+void Enemy::attack(Hero* hero) {
+    int deffence = hero->GetDiffence();
+    int damage = 0;
+    damage = statusAttack - deffence;
+    printf("%sの攻撃！\n%dのダメージを与えた\n", name_array, damage);
 
+    int hp = hero->GetHp(damage);
+    printf("相手の残りHP : %d\n", hp);
 }
 
-void heal() {
+void Hero::heal() {
+    int healHp = 0;
+    printf("どのくらい回復しますか\n> ");
+    cin >> healHp;
+    printf("%sの残りHP : %d\n", name_array, GetHp() + healHp);
+}
 
+void Enemy::heal() {
+    int healHp = 0;
+    printf("どのくらい回復しますか\n> ");
+    cin >> healHp;
+    printf("%sの残りHP : %d\n", name_array, GetHp() + healHp);
 }
 
 int main()
 {
-    InputHeroStatus();
-    InputEnemyStatus();
+    bool turn = false;
+    Hero hero = InputHeroStatus();
+    Enemy enemy = InputEnemyStatus();
     
-    /*int select = 0;
+    int select = 0;
     while (!0) {
-        printf("攻撃 > 1\n回復 > 2");
+        printf("攻撃 : 1\, 回復 : 2\n> ");
         cin >> select;
 
         switch (select)
         {
         case 1:
-            attack();
+            hero.attack(&enemy);
+            break;
+        case 2:
+            hero.heal();
             break;
         default:
             break;
         }
-    }*/
+        if (enemy.GetHp() <= 0) { break; }
+
+        printf("攻撃 : 1\, 回復 : 2\n> ");
+        cin >> select;
+
+        switch (select)
+        {
+        case 1:
+            enemy.attack(&hero);
+            break;
+        default:
+            break;
+        }
+        if (hero.GetHp() <= 0) { break; }
+    }
 }
