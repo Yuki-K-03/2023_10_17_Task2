@@ -16,8 +16,10 @@ public:
     int GetDiffence() {
         return statusDiffence;
     };
-    int GetHp(int damage = 0) {
-        return StatusHp - damage;
+    int GetHp(int damage = 0, int healHp = 0) {
+        StatusHp -= damage;
+        StatusHp += healHp;
+        return StatusHp;
     }
     void SetHp(int hp) { StatusHp = hp; };
     void Show();
@@ -72,8 +74,10 @@ public:
     int GetDiffence() {
         return statusDiffence;
     };
-    int GetHp(int damage = 0) {
-        return StatusHp -= damage;
+    int GetHp(int damage = 0, int healHp = 0) {
+        StatusHp -= damage;
+        StatusHp += healHp;
+        return StatusHp;
     }
     void SetHp(int hp) { StatusHp = hp; };
     void Show();
@@ -119,7 +123,7 @@ void Enemy::Show() {
 }
 
 Hero InputHeroStatus() {
-    char name[MAX_NAME]{""};
+    char name[MAX_NAME]{ "" };
     int hp = 0;
 
     printf("ヒーロー名を入力\n> ");
@@ -160,7 +164,6 @@ void Hero::attack(Enemy* enemy) {
 
     int hp = enemy->GetHp(damage);
     printf("相手の残りHP : %d\n", hp);
-    
 }
 
 void Enemy::attack(Hero* hero) {
@@ -177,14 +180,14 @@ void Hero::heal() {
     int healHp = 0;
     printf("どのくらい回復しますか\n> ");
     cin >> healHp;
-    printf("%sの残りHP : %d\n", name_array, GetHp() + healHp);
+    printf("%sの残りHP : %d\n", name_array, GetHp(0, healHp));
 }
 
 void Enemy::heal() {
     int healHp = 0;
     printf("どのくらい回復しますか\n> ");
     cin >> healHp;
-    printf("%sの残りHP : %d\n", name_array, GetHp() + healHp);
+    printf("%sの残りHP : %d\n", name_array, GetHp(0, healHp));
 }
 
 int main()
@@ -195,33 +198,54 @@ int main()
     
     int select = 0;
     while (!0) {
-        printf("攻撃 : 1\, 回復 : 2\n> ");
-        cin >> select;
 
-        switch (select)
-        {
-        case 1:
-            hero.attack(&enemy);
-            break;
-        case 2:
-            hero.heal();
-            break;
-        default:
-            break;
+        turn = true;
+        while (turn) {
+            printf("攻撃 : 1, 回復 : 2, ステータス確認 : 3\n> ");
+            cin >> select;
+            switch (select)
+            {
+            case 1:
+                hero.attack(&enemy);
+                turn = false;
+                break;
+            case 2:
+                hero.heal();
+                turn = false;
+                break;
+            case 3:
+                hero.Show();
+                break;
+            default:
+                break;
+            }
         }
+        printf("\nターンチェンジ\n");
         if (enemy.GetHp() <= 0) { break; }
 
-        printf("攻撃 : 1\, 回復 : 2\n> ");
-        cin >> select;
+        turn = true;
 
-        switch (select)
-        {
-        case 1:
-            enemy.attack(&hero);
-            break;
-        default:
-            break;
+        while (turn) {
+            printf("攻撃 : 1, 回復 : 2, ステータス確認 : 3\n> ");
+            cin >> select;
+            switch (select)
+            {
+            case 1:
+                enemy.attack(&hero);
+                turn = false;
+                break;
+            case 2:
+                enemy.heal();
+                turn = false;
+                break;
+            case 3:
+                enemy.Show();
+                break;
+            default:
+                break;
+            }
         }
+        printf("\nターンチェンジ\n");
         if (hero.GetHp() <= 0) { break; }
     }
 }
