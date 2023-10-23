@@ -3,38 +3,46 @@
 #include <cstring>
 using namespace std;
 
-enum _Attack {
-    _AttackPlayer = -1,
-    _AttacaEnemy = 1,
-};
+
+const int MAX_NAME = 16;
 
 class Hero {
 public :
-    Hero(int size);
+    Hero(char *pName);
     ~Hero();
 
 public:
     int Get(int i);
     void Set(int i, int value);
+    void Show();
 
 private:
     // インデックスのチェック
     void CheckIndex(int i);
 
 private :
-    int* name_array;
+    char* name_array;
     int name_size;
 
 private :
-    int hp;
-    int statusAttack;
-    int statusDiffence;
+    int hp = 10;
+    int statusAttack = 10;
+    int statusDiffence = 10;
 };
 
 // コンストラクタ
-Hero::Hero(int size) {
-    name_array = new int[size];
+Hero::Hero(char *pName) {
+    int size = 0;
+    for (int i = 0; pName[i] != '\0'; i++) {
+        size++;
+    }
+    size++;
+    name_array = new char[size];
     name_size = size;
+    for (int i = 0; i < size; i++) {
+        name_array[i] = pName[i];
+        printf("%c\n", name_array[i]);
+    }
 }
 
 // デストラクタ
@@ -42,6 +50,14 @@ Hero::~Hero() {
     delete[] name_array;
 }
 
+
+
+void Hero::Show() {
+    printf("名前：%s\n", name_array);
+    printf("体力：%d\n", hp);
+    printf("攻撃力：%d, ", statusAttack);
+    printf("防御力：%d\n", statusDiffence);
+}
 
 
 class Enemy {
@@ -67,8 +83,17 @@ private:
     int statusDiffence;
 };
 
-void InputStatus() {
+void InputHeroStatus() {
+    char name[MAX_NAME]{""};
+    int hp = 0;
 
+    printf("ヒーロー名を入力\n> ");
+    cin >> name;
+    printf("HPを入力\n> ");
+    cin >> hp;
+
+    Hero hero(&name[0]);
+    hero.Show();
 }
 
 void attack() {
@@ -81,15 +106,18 @@ void heal() {
 
 int main()
 {
-    int select = 0;
+    /*int select = 0;
     while (!0) {
         printf("攻撃 > 1\n回復 > 2");
         cin >> select;
 
         switch (select)
         {
+        case 1:
+            attack();
+            break;
         default:
             break;
         }
-    }
+    }*/
 }
