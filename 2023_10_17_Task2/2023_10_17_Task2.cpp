@@ -88,6 +88,8 @@ int main()
 
         switch (select)
         {
+        case 1:
+            break;
         default:
             break;
         }
