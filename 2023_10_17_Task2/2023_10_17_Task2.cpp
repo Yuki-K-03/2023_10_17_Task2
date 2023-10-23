@@ -12,7 +12,12 @@ public :
     ~Hero();
 
 public:
-    int Get(int i);
+    int GetStatus(char *name, int hp, int attack, int deffence) {
+        name = name_array;
+        hp = StatusHp;
+        attack = statusAttack;
+        deffence = statusDiffence;
+    };
     void SetHp(int hp) { StatusHp = hp; };
     void Show();
 
@@ -37,7 +42,6 @@ Hero::Hero(char *pName) {
     name_size = size;
     for (int i = 0; i < size; i++) {
         name_array[i] = pName[i];
-        printf("%c\n", name_array[i]);
     }
 }
 
@@ -60,7 +64,12 @@ public:
     ~Enemy();
 
 public:
-    int Get(int i);
+    int GetStatus(char* name, int hp, int attack, int deffence) {
+        name = name_array;
+        hp = StatusHp;
+        attack = statusAttack;
+        deffence = statusDiffence;
+    };
     void SetHp(int hp) { StatusHp = hp; };
     void Show();
 
@@ -70,8 +79,8 @@ private:
 
 private:
     int StatusHp = 0;
-    int statusAttack = 40;
-    int statusDiffence = 20;
+    int statusAttack = 20;
+    int statusDiffence = 40;
 };
 
 // コンストラクタ
@@ -85,7 +94,6 @@ Enemy::Enemy(char* pName) {
     name_size = size;
     for (int i = 0; i < size; i++) {
         name_array[i] = pName[i];
-        printf("%c\n", name_array[i]);
     }
 }
 
@@ -116,7 +124,26 @@ void InputHeroStatus() {
     hero.Show();
 }
 
-void attack() {
+void InputEnemyStatus() {
+    char name[MAX_NAME]{ "" };
+    int hp = 0;
+
+    printf("エネミー名を入力\n> ");
+    cin >> name;
+    Enemy enemy(&name[0]);
+
+    printf("HPを入力\n> ");
+    cin >> hp;
+    enemy.SetHp(hp);
+
+    enemy.Show();
+}
+
+void attack(Hero *hero) {
+
+}
+
+void attack(Enemy *enemy) {
 
 }
 
@@ -127,6 +154,7 @@ void heal() {
 int main()
 {
     InputHeroStatus();
+    InputEnemyStatus();
     
     /*int select = 0;
     while (!0) {
