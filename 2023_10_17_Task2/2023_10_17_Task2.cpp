@@ -3,6 +3,10 @@
 #include <cstring>
 using namespace std;
 
+enum _Attack {
+    _AttackPlayer = -1,
+    _AttacaEnemy = 1,
+};
 
 class Hero {
 public :
@@ -77,7 +81,15 @@ void heal() {
 
 int main()
 {
-    while () {
+    int select = 0;
+    while (!0) {
+        printf("攻撃 > 1\n回復 > 2");
+        cin >> select;
 
+        switch (select)
+        {
+        default:
+            break;
+        }
     }
 }
