@@ -13,21 +13,17 @@ public :
 
 public:
     int Get(int i);
-    void Set(int i, int value);
+    void SetHp(int hp) { StatusHp = hp; };
     void Show();
-
-private:
-    // インデックスのチェック
-    void CheckIndex(int i);
 
 private :
     char* name_array;
     int name_size;
 
 private :
-    int hp = 10;
-    int statusAttack = 10;
-    int statusDiffence = 10;
+    int StatusHp = 0;
+    int statusAttack = 40;
+    int statusDiffence = 20;
 };
 
 // コンストラクタ
@@ -50,11 +46,9 @@ Hero::~Hero() {
     delete[] name_array;
 }
 
-
-
 void Hero::Show() {
     printf("名前：%s\n", name_array);
-    printf("体力：%d\n", hp);
+    printf("体力：%d\n", StatusHp);
     printf("攻撃力：%d, ", statusAttack);
     printf("防御力：%d\n", statusDiffence);
 }
@@ -62,26 +56,50 @@ void Hero::Show() {
 
 class Enemy {
 public:
-    Enemy(int size);
+    Enemy(char* pName);
     ~Enemy();
 
 public:
     int Get(int i);
-    void Set(int i, int value);
+    void SetHp(int hp) { StatusHp = hp; };
+    void Show();
 
 private:
-    // インデックスのチェック
-    void CheckIndex(int i);
-
-private:
-    int* name_array;
+    char* name_array;
     int name_size;
 
 private:
-    int hp;
-    int statusAttack;
-    int statusDiffence;
+    int StatusHp = 0;
+    int statusAttack = 40;
+    int statusDiffence = 20;
 };
+
+// コンストラクタ
+Enemy::Enemy(char* pName) {
+    int size = 0;
+    for (int i = 0; pName[i] != '\0'; i++) {
+        size++;
+    }
+    size++;
+    name_array = new char[size];
+    name_size = size;
+    for (int i = 0; i < size; i++) {
+        name_array[i] = pName[i];
+        printf("%c\n", name_array[i]);
+    }
+}
+
+// デストラクタ
+Enemy::~Enemy() {
+    delete[] name_array;
+}
+
+void Enemy::Show() {
+    printf("名前：%s\n", name_array);
+    printf("体力：%d\n", StatusHp);
+    printf("攻撃力：%d, ", statusAttack);
+    printf("防御力：%d\n", statusDiffence);
+}
 
 void InputHeroStatus() {
     char name[MAX_NAME]{""};
@@ -89,10 +107,12 @@ void InputHeroStatus() {
 
     printf("ヒーロー名を入力\n> ");
     cin >> name;
+    Hero hero(&name[0]);
+
     printf("HPを入力\n> ");
     cin >> hp;
+    hero.SetHp(hp);
 
-    Hero hero(&name[0]);
     hero.Show();
 }
 
@@ -106,6 +126,8 @@ void heal() {
 
 int main()
 {
+    InputHeroStatus();
+    
     /*int select = 0;
     while (!0) {
         printf("攻撃 > 1\n回復 > 2");
