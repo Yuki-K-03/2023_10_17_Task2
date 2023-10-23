@@ -119,7 +119,7 @@ void Enemy::Show() {
 }
 
 Hero InputHeroStatus() {
-    char name[MAX_NAME]{""};
+    char name[MAX_NAME]{ "" };
     int hp = 0;
 
     printf("ヒーロー名を入力\n> ");
