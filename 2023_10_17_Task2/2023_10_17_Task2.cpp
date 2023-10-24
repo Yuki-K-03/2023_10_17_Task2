@@ -201,7 +201,7 @@ int main()
 
         turn = true;
         while (turn) {
-            printf("攻撃 : 1, 回復 : 2, ステータス確認 : 3\n> ");
+            printf("ヒーロー >> 攻撃 : 1, 回復 : 2, ステータス確認 : 3\n> ");
             cin >> select;
             switch (select)
             {
@@ -226,7 +226,7 @@ int main()
         turn = true;
 
         while (turn) {
-            printf("攻撃 : 1, 回復 : 2, ステータス確認 : 3\n> ");
+            printf("エネミー >> 攻撃 : 1, 回復 : 2, ステータス確認 : 3\n> ");
             cin >> select;
             switch (select)
             {
