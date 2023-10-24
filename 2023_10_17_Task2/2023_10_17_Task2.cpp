@@ -220,7 +220,7 @@ int main()
                 break;
             }
         }
-        printf("\nターンチェンジ\n");
+        printf("\n----------ターンチェンジ----------\n\n");
         if (enemy.GetHp() <= 0) { break; }
 
         turn = true;
@@ -245,7 +245,7 @@ int main()
                 break;
             }
         }
-        printf("\nターンチェンジ\n");
+        printf("\n----------ターンチェンジ----------\n\n");
         if (hero.GetHp() <= 0) { break; }
     }
 }
