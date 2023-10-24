@@ -1,9 +1,11 @@
-﻿#include <iostream>
+﻿#define _CRT_SECURE_NO_WARNINGS
+
+#include <iostream>
 #include <cstdlib>
 #include <cstring>
 using namespace std;
 
-class Enemy;
+class Enemy; // 前方宣言
 
 const int MAX_NAME = 16;
 
@@ -23,6 +25,15 @@ public:
     }
     void SetHp(int hp) { StatusHp = hp; };
     void Show();
+
+public :
+    Hero(char* pName, int hp);
+    int getHp() {
+        return StatusHp;
+    }
+    void setHp(int hp) {
+        StatusHp = hp;
+    }
 
 public :
     void attack(Enemy* enemy);
@@ -52,9 +63,22 @@ Hero::Hero(char *pName) {
     }
 }
 
+Hero::Hero(char* pName, int hp) {
+    name_size = strlen(pName) + 1;
+    name_array = new char[name_size];
+    strcpy(name_array, pName);
+
+    StatusHp = hp;
+    statusAttack = 75;
+    statusDiffence = 20;
+}
+
 // デストラクタ
 Hero::~Hero() {
-    delete[] name_array;
+    if (name_array != NULL) {
+        delete[] name_array;
+        name_array = NULL;
+    }
 }
 
 void Hero::Show() {
@@ -81,6 +105,15 @@ public:
     }
     void SetHp(int hp) { StatusHp = hp; };
     void Show();
+
+public:
+    Enemy(char* pName, int hp);
+    int getHp() {
+        return StatusHp;
+    }
+    void setHp(int hp) {
+        StatusHp = hp;
+    }
 
 public:
     void attack(Hero* hero);
@@ -110,9 +143,22 @@ Enemy::Enemy(char* pName) {
     }
 }
 
+Enemy::Enemy(char* pName, int hp) {
+    name_size = strlen(pName) + 1;
+    name_array = new char[name_size];
+    strcpy(name_array, pName);
+
+    StatusHp = hp;
+    statusAttack = 75;
+    statusDiffence = 20;
+}
+
 // デストラクタ
 Enemy::~Enemy() {
-    delete[] name_array;
+    if (name_array != NULL) {
+        delete[] name_array;
+        name_array = NULL;
+    }
 }
 
 void Enemy::Show() {
@@ -128,12 +174,11 @@ Hero InputHeroStatus() {
 
     printf("ヒーロー名を入力\n> ");
     cin >> name;
-    Hero hero(&name[0]);
 
     printf("HPを入力\n> ");
     cin >> hp;
-    hero.SetHp(hp);
 
+    Hero hero(&name[0], hp);
     hero.Show();
 
     return hero;
@@ -145,11 +190,11 @@ Enemy InputEnemyStatus() {
 
     printf("エネミー名を入力\n> ");
     cin >> name;
-    Enemy enemy(&name[0]);
 
     printf("HPを入力\n> ");
     cin >> hp;
-    enemy.SetHp(hp);
+
+    Enemy enemy(&name[0], hp);
 
     enemy.Show();
 
@@ -162,8 +207,9 @@ void Hero::attack(Enemy* enemy) {
     damage = statusAttack - deffence;
     printf("%sの攻撃！\n%dのダメージを与えた\n", name_array, damage);
 
-    int hp = enemy->GetHp(damage);
-    printf("相手の残りHP : %d\n", hp);
+    int hp = enemy->getHp();
+    enemy->setHp(hp - damage);
+    printf("相手の残りHP : %d\n", enemy->getHp());
 }
 
 void Enemy::attack(Hero* hero) {
@@ -172,22 +218,27 @@ void Enemy::attack(Hero* hero) {
     damage = statusAttack - deffence;
     printf("%sの攻撃！\n%dのダメージを与えた\n", name_array, damage);
 
-    int hp = hero->GetHp(damage);
-    printf("相手の残りHP : %d\n", hp);
+    int hp = hero->getHp();
+    hero->setHp(hp - damage);
+    printf("相手の残りHP : %d\n", hero->getHp());
 }
 
 void Hero::heal() {
     int healHp = 0;
     printf("どのくらい回復しますか\n> ");
     cin >> healHp;
-    printf("%sの残りHP : %d\n", name_array, GetHp(0, healHp));
+
+    StatusHp += healHp;
+    printf("%sの残りHP : %d\n", name_array, StatusHp);
 }
 
 void Enemy::heal() {
     int healHp = 0;
     printf("どのくらい回復しますか\n> ");
     cin >> healHp;
-    printf("%sの残りHP : %d\n", name_array, GetHp(0, healHp));
+
+    StatusHp += healHp;
+    printf("%sの残りHP : %d\n", name_array, StatusHp);
 }
 
 int main()
